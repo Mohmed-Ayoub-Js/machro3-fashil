@@ -1,0 +1,71 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+ 
+model User {
+  id String @id @default(uuid())
+  username String
+  password String
+  profile String
+  bio String
+  posts Post[]
+  website String @default("")
+  follwers Follwers[]
+  follwing Follwing[]
+  banner String @default("")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Post {
+  id String @id @default(uuid())
+  userID String
+  user User @relation(references: [id] , fields: [userID])
+  cetegory String
+  body String
+  likes Likes[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum TypeOfReport {
+  POST 
+  USER
+}
+
+model Report {
+  id String @id @default(uuid())
+  type TypeOfReport
+  note String
+  reporter String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Likes {
+  id String @id @default(uuid())
+  postId String
+  post Post @relation(references: [id] , fields: [postId])
+  createdAt DateTime @default(now())
+
+}
+
+model Follwers {
+  id String @id @default(uuid())
+  userId String
+  post User @relation(references: [id] , fields: [userId])
+  createdAt DateTime @default(now())
+}
+
+model Follwing {
+  id String @id @default(uuid())
+  userId String
+  post User @relation(references: [id] , fields: [userId])
+  createdAt DateTime @default(now())
+}
